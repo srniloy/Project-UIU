@@ -14,7 +14,6 @@ function init() {
         slides.style.left = i * 100 + "%";
     });
     createNavigationDots();
-    autoAnimate();
 }
 init();
 
@@ -27,84 +26,57 @@ function createNavigationDots() {
     navigationDotsBox.children[0].classList.add('active');
 }
 
-function autoAnimate() {
-    slideBox.style.transform = "translateX(-" + slideBoxWidth * currentSlide + "px)";
+// Action of Next Button
+nxtBtn.addEventListener('click',() => {
+    nextSlide();
+    resetTimerOfHomeSlider();
+});
 
-    if (currentSlide == 0) {
-        navigationDotsBox.children[numberOfSlide - 1].classList.remove('active');
-        navigationDotsBox.children[currentSlide].classList.add('active');
-    } else {
-        navigationDotsBox.children[currentSlide - 1].classList.remove('active');
-        navigationDotsBox.children[currentSlide].classList.add('active');
-    }
-
-    if (currentSlide >= numberOfSlide - 1) {
+function nextSlide(){
+    if(currentSlide == numberOfSlide-1){
         currentSlide = 0;
-    } else {
+    }else{
         currentSlide++;
     }
-
-
-
-
-    setTimeout("autoAnimate()", 3000);
+    changeSlide();
 }
 
-
-
-// next button
-nxtBtn.addEventListener('click', () => {
-    if (currentSlide >= numberOfSlide - 1) {
-        actionOfBtn(0);
-        currentSlide = 0;
-        actionOfNextDots(0);
-        return;
-    }
-
-    currentSlide++;
-    actionOfBtn(currentSlide);
-    actionOfNextDots(currentSlide);
+// Action of previous button
+prevBtn.addEventListener('click',()=> {
+    prevSlide();
+    resetTimerOfHomeSlider();
 });
 
-// previous button
-prevBtn.addEventListener('click', () => {
-    if (currentSlide <= 0) {
-        actionOfBtn(numberOfSlide - 1);
-        currentSlide = numberOfSlide - 1;
-        actionOfPrevDots(currentSlide);
-        return;
+function prevSlide(){
+    if(currentSlide == 0){
+        currentSlide = numberOfSlide-1;
     }
-    currentSlide--;
-    actionOfBtn(currentSlide);
-    actionOfPrevDots(currentSlide);
-});
-
-function actionOfBtn(i) {
-    slideBox.style.transform = "translateX(-" + slideBoxWidth * i + "px)";
+    else{
+        currentSlide--;
+    }
+    changeSlide();
 }
 
-function actionOfNextDots(a) {
-    if (a == 0) {
-        navigationDotsBox.children[numberOfSlide - 1].classList.remove("active");
-        navigationDotsBox.children[a].classList.add("active");
-    } else {
-        navigationDotsBox.children[a - 1].classList.remove("active");
-        navigationDotsBox.children[a].classList.add("active");
-
+function changeSlide(){
+    for(let i=0;i<numberOfSlide;i++){
+        navigationDotsBox.children[i].classList.remove('active');
     }
-
+    navigationDotsBox.children[currentSlide].classList.add('active');
+    slideBox.style.transform = "translateX(-"+ slideBoxWidth * currentSlide + "px)";
+    console.log(currentSlide * slideBoxWidth);
 }
 
-function actionOfPrevDots(a) {
-    if (a == numberOfSlide - 1) {
-        navigationDotsBox.children[0].classList.remove("active");
-        navigationDotsBox.children[a].classList.add("active");
-    } else {
-        navigationDotsBox.children[a + 1].classList.remove("active");
-        navigationDotsBox.children[a].classList.add("active");
 
-    }
+// auto changing slider
+function autoChangeSlide(){
+    nextSlide();
 
+}
+let timerOfHomeSlider = setInterval(autoChangeSlide,4000);
+
+function resetTimerOfHomeSlider(){
+    clearInterval(timerOfHomeSlider);
+    timerOfHomeSlider = setInterval(autoChangeSlide,4000);
 }
 
 
@@ -155,7 +127,7 @@ function autoAnimateTopNewsSlide() {
     }
     topNewsCurrentSlide++;
     topNewsSlidesBox.style.transform = "translateX(-" + 100 * (topNewsCurrentSlide - 1) + "%)";
-    console.log(topNewsCurrentSlide - 1);
+    
 
 
     setTimeout("autoAnimateTopNewsSlide()", 4000);
@@ -167,7 +139,6 @@ topNewsSliderNextBtn.addEventListener('click', () => {
         topNewsCurrentSlide = 0;
     } else {
         topNewsCurrentSlide++;
-        console.log(topNewsCurrentSlide);
         topNewsSlidesBox.style.transform = "translateX(-" + 100 * topNewsCurrentSlide + "%)";
 
 
@@ -179,7 +150,6 @@ topNewsSliderPrevBtn.addEventListener('click', () => {
         topNewsCurrentSlide = topNewsAllSlide.length;
     }
     topNewsCurrentSlide--;
-    console.log(topNewsCurrentSlide);
     topNewsSlidesBox.style.transform = "translateX(-" + 100 * topNewsCurrentSlide + "%)";
 
 
